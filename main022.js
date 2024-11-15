@@ -1,5 +1,5 @@
-
 let video = null;
+let debugLog = "022";
 
 async function startCamera() {
   try {
@@ -26,22 +26,37 @@ async function startCamera() {
     video.setAttribute('playsinline', true); // for IOS
     video.style.display = "none";
 
-    video.style.width = window.innerWidth + "px";
-    video.style.height = window.innerHeight + "px";
-
-    if (faceMode == "user") {
-      video.style.transform = "scale(-1, 1)";
-  } else {
-      video.style.transform = "scale(1, 1)";
-  }
-    document.body.appendChild(video);
+    // video.style.width = window.innerWidth + "px";
+    // video.style.height = window.innerHeight + "px";
+    // video.style.transformStyle = "preserve-3d";
+    // let styleStr = ""
+  //   if (faceMode == "user") {
+  //     video.style.transform = "scale(-1, 1) translateZ(0) translate";
+  // } else {
+  //     video.style.transform = "scale(1, 1) translateZ(0) ";
+  // }
+    // document.body.appendChild(video);
 
     video.play();
-    video.style.display  = "block";
+    // document.body.prepend(video);
 
-    video.onloadedmetadata = () => {
+    video.onloadedmetadata = async () => {
         console.log("onloadedmetadata");
+    
+        // // wait 0.5 sec
+        // await new Promise(r => setTimeout(r, 500));
+       
         main();
+        // resetCanvasTransform();
+        showCanvasInfo();
+
+        video.style.display = "block";
+
+        // if (faceMode == "user") {
+        //   video.style.transform = "scale(-1, 1) translateZ(-1px)";
+        // } else {
+        //     video.style.transform = "scale(1, 1) translateZ(-1px)";
+        // }
      };
   } catch (err) {
     console.error('Error accessing the camera: ', err);
@@ -50,8 +65,20 @@ async function startCamera() {
 }
 
 
-async function main(){
+function showCanvasInfo(){
+  const canvasThree = document.getElementById('threeCanvas');
+  let style = window.getComputedStyle(canvasThree);
+  console.log('CanvasThree transform:', style.transform);
+  console.log('CanvasThree webkit-transform:', style.webkitTransform);
+  
+  // show style transform of video
+  let videoStyle = window.getComputedStyle(video);
+  console.log('Video transform:', videoStyle.transform);
+  console.log('Video webkit-transform:', videoStyle.webkitTransform);
+}
 
+async function main(){
+  console.log(debugLog);
   // get the 2 canvas from the DOM:
   const canvasFace = document.getElementById('WebARRocksFaceCanvas');
   const canvasThree = document.getElementById('threeCanvas');
@@ -128,8 +155,13 @@ async function main(){
     taaLevel: 0,
 
     // called once all is loaded:
-    callback: function(){
+    callback: async function(){
       document.getElementById('loading').style.display = 'none';
+      console.log('WebARRocksMirror initialized successfully 2');
+      video.style.display = "none";
+      // wait 0.25sec
+      await new Promise(r => setTimeout(r, 250));
+      video.style.display = "block";
     },
 
     // debug flags - all should be false for production:
@@ -137,7 +169,7 @@ async function main(){
     debugOccluder: false
   }).then(function(){
     console.log('WebARRocksMirror initialized successfully');
-
+  
     // display controls:
     document.getElementById('controls').style.display = 'flex';
 
@@ -147,6 +179,7 @@ async function main(){
     }
     window.addEventListener('orientationchange', resizeCallback);
     window.addEventListener('resize', resizeCallback);
+    // video.style.display = "block";
 
   }).catch(function(err){
     alert('An error happens with WebARRocksMirror: ' + err.toString());
@@ -172,6 +205,23 @@ function startDemo() {
   startCamera();
   document.getElementById('loading').style.display = 'none';
   document.getElementById('controls').style.display = 'flex';
-  // document.getElementById('startButton').style.display = 'none';
-  
 }
+
+function resizeCanvas(){
+  WebARRocksMirror.resize(400, 400);
+}
+
+function showhideVideo(){
+  // resetCanvasTransform();
+  showCanvasInfo();
+  // if(video.style.display == "none"){
+  //   video.style.display = "block";
+  // }else{
+  //   video.style.display = "none";
+  // }
+  // show zindex of video
+  // let zIndex = window.getComputedStyle(video).zIndex;
+  // console.log('Video z-index:', zIndex);
+  // // show zindex of threeCanvas
+}
+

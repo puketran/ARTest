@@ -45,46 +45,40 @@
     <script src="./helpers/landmarksStabilizers/OneEuroLMStabilizer.js"></script>
     
     <!-- INCLUDE MAIN DEMO SCRIPT: -->
-    <script src="./main.js"></script>
+    <!-- <script src="./main.js"></script> -->
+    <script>
+        let fileName = 'main022.js';
+        const script = document.createElement("script");
+        script.src = fileName;
+        document.head.appendChild(script);
+      
+    </script>
 
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-     <!--
-      The first canvas is used by WebAR.rocks.mirror
-      It is linked to a WebGL context used by the deep learning engine
-      And it displays the video of the webcam.
-      
-      Since we need to transfer the video to a texture for face detection,
-      it is not costly at all to use this texture for display.
-
-      You can tweak the rendering of the video in WebARRocksFaceThreeHelper.js,
-      by editing the fragment shader of _shps.copy
-    -->
-    <video id="video" autoplay muted loop>
-      <source src="video.mp4"type="video/mp4">
+    <video id="video" autoplay muted loop playsinline>
+      <source src="video.mp4" type="video/mp4">
     </video>
     <canvas id='WebARRocksFaceCanvas'></canvas>
-
-
-    <!--
-      The second canvas is used by THREE.js for 3D rendering:
-    -->
     <canvas id='threeCanvas'></canvas>
-
     <div id='controls'>
-      <div onclick='WebARRocksMirror.load(false)'>Video only</div>
+      <div onclick='showhideVideo()'>Show/Hide Video</div>
       <div onclick='WebARRocksMirror.pause(true)'>Pause</div>
       <div onclick='WebARRocksMirror.resume(true)'>Resume</div>
-      <div onclick='WebARRocksMirror.resize(400, 400)'>Resize</div>
+      <div onclick="resizeCanvas()">Resize</div>
       <div onclick='capture_image()'>Capture</div>
     </div>
-
     <div id='loading' onclick='startDemo()'>
       <div>
         CLICK TO START
       </div>
     </div>
+    <script src="https://unpkg.com/vconsole@latest/dist/vconsole.min.js"></script>
+    <script>
+    // VConsole will be exported to `window.VConsole` by default.
+    var vConsole = new window.VConsole();
+    </script>
   </body>
 </html>
 
